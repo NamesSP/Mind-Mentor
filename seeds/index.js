@@ -2,10 +2,10 @@ const seedMoods = require("./moods-seeds");
 const seedDiary = require("./diary-seeds");
 const seedUsers = require("./user-seeds");
 const sequelize = require("../config/connection");
-
+// console.log("****here************************");
 const seedAll = async () => {
   await sequelize.sync({ force: true });
-  // console.log("**********DATABASE SYNCED ************");
+  console.log("**********DATABASE SYNCED ************");
   await seedUsers();
   await seedMoods();
   // console.log("*************MOODS SYNCED**********");
