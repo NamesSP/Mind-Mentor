@@ -16,16 +16,22 @@ async function renderDiaryEntry() {
         const entryDate = document.createElement('p');
         const entryMood = document.createElement('p');
         const entryDescription = document.createElement('p');
+        const entryAudio = document.createElement('audio');
 
         entryTitle.textContent = entry.title;
         entryDate.textContent = entry.date_created;
         entryDescription.textContent = entry.description;
+        if (entry.audio_path) {
+            entryAudio.src = `/${entry.audio_path}`;  // Set the correct path
+            entryAudio.controls = true;
+        }
         
         entryContainer.classList.add("entryContainer");
         entryTitle.classList.add("entryTitle");
         entryDate.classList.add("entryDate");
         entryDescription.classList.add("entryDescription");
         entryMood.classList.add("entryMood");
+        entryAudio.classList.add("entryAudio");
         
         switch(entry.mood_id) {
             case 1:
@@ -75,6 +81,7 @@ async function renderDiaryEntry() {
         entryContainer.append(entryDate);
         entryContainer.append(entryMood);
         entryContainer.append(entryDescription);
+        entryContainer.append(entryAudio);
         diaryListContainer.append(entryContainer);
     })
 }

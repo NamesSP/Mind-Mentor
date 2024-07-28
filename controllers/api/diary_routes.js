@@ -5,15 +5,15 @@ const withAuth = require('../../utils/auth');
 
 // GET all Diary
 // localhost:3001/api/diary
-router.get('/',withAuth, async (req, res) => {
+router.get('/',async (req, res) => {
   // console.log("GET /api/diary");
   // console.log(req.session.id);
   try {
-    const diaryData = await Diary.findAll({
-      where: {
-        user_id: req.session.user_id,
-      },
-    });
+    const diaryData = await Diary.findAll();
+    //   where: {
+    //     user_id: req.session.user_id,
+    //   },
+    // });
     res.status(200).json(diaryData);
   } catch (err) {
     res.status(500).json(err);

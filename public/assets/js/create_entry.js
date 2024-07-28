@@ -15,30 +15,33 @@ success.textContent = "";
 async function createDescriptionFunc(event) {
     event.preventDefault();
     const title = document.querySelector("#title").value.trim();
-    const mood = document.querySelector("#mood").value.trim();
+    const mood_id = document.querySelector("#mood").value.trim();
     const description = document.querySelector("#text-area").value.trim();
+    const audio = document.querySelector("#audio").files[0];
     // console.log(mood);
     // console.log("This is createDescriptionFunc");
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("mood_id", mood_id);
+    formData.append("description", description);
+    formData.append("audio", audio);
+    formData.append("date_created", dateStr);
+
     const response = await fetch("/api/create", {
       method: "POST",
-      body: JSON.stringify({
-        date_created: dateStr,
-        title: title,
-        description: description,
-        mood_id: mood
-        // user_id: This is provided by backend
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      body: formData,
     });
+
     if (response.ok) {
-    // console.log("entry added");
-      success.textContent = "Your entry has been successfully added!";
+      document.querySelector("#success").textContent = "Your entry has been successfully added!";
     } else {
       const resData = await response.json();
+      console.error(resData);
+      console.log("error in create_entry.js");
     }
   }
   const createEntryForm = document.getElementById("form-description");//targets our form in html
   // console.log(createEntryForm);
 createEntryForm.addEventListener("submit", createDescriptionFunc);
+
+// document.querySelector("#create-entry-form").addEventListener("submit", createDescriptionFunc);

@@ -21,7 +21,7 @@ Diary.init(
         },
         description: {
             type: DataTypes.STRING(1000),
-            allowNull: false
+            allowNull: true
         },
         mood_id: {
             type: DataTypes.INTEGER,
@@ -33,7 +33,11 @@ Diary.init(
                 model: 'user',
                 key: 'id'
             },
-        }
+        },
+        audio_path: {
+            type: DataTypes.STRING,
+            allowNull: true,
+          },
     },
     {
         sequelize,
