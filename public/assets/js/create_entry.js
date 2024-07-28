@@ -1,47 +1,95 @@
 var dt = new Date();
-var mm = (dt.getMonth()+ 1).toString().padStart(2, '0');
+var mm = (dt.getMonth() + 1).toString().padStart(2, '0');
 var dd = dt.getDate().toString().padStart(2, '0');
 var yyyy = dt.getFullYear();
-var dateStr = mm+"-"+dd+"-"+yyyy;
-// console.log(dt);
-// console.log(mm);
-// console.log(dd);
-// console.log(yyyy);
-// console.log(mm+"-"+dd+"-"+yyyy);
-// console.log(dateStr);
-const success = document.getElementById("success")
+var dateStr = mm + "-" + dd + "-" + yyyy;
+const success = document.getElementById("success");
 success.textContent = "";
 
-async function createDescriptionFunc(event) {
-    event.preventDefault();
-    const title = document.querySelector("#title").value.trim();
-    const mood_id = document.querySelector("#mood").value.trim();
-    const description = document.querySelector("#text-area").value.trim();
-    const audio = document.querySelector("#audio").files[0];
-    // console.log(mood);
-    // console.log("This is createDescriptionFunc");
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("mood_id", mood_id);
-    formData.append("description", description);
-    formData.append("audio", audio);
-    formData.append("date_created", dateStr);
+// For recording audio
+let chunks = [];
+let mediaRecorder;
 
-    const response = await fetch("/api/create", {
-      method: "POST",
-      body: formData,
-    });
+const recordButton = document.getElementById("record-button");
+const audioPlayback = document.getElementById("audio-playback");
+console.log("control is here :", recordButton);
+recordButton.addEventListener("click", async (event) => {
+  event.preventDefault();
+  console.log("record button clicked");
+  if (mediaRecorder && mediaRecorder.state === "recording") {
+    mediaRecorder.stop();
+    recordButton.textContent = "Record";
+  } else {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert("Your browser does not support audio recording.");
+      return;
+    }
 
-    if (response.ok) {
-      document.querySelector("#success").textContent = "Your entry has been successfully added!";
-    } else {
-      const resData = await response.json();
-      console.error(resData);
-      console.log("error in create_entry.js");
+    try {
+      console.log("inside try block");
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+
+      mediaRecorder.ondataavailable = (event) => {
+        console.log("data available");
+        if (event.data.size > 0) {
+          chunks.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        console.log("recording stopped")
+        const blob = new Blob(chunks, { type: "audio/wav" });
+        chunks = [];
+        const audioURL = window.URL.createObjectURL(blob);
+        audioPlayback.src = audioURL;
+        audioPlayback.controls = true;
+        console.log("#blob", blob)
+        // Create a File object and use DataTransfer to assign it to the input
+        const file = new File([blob], "recording.wav", { type: "audio/wav" });
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        document.querySelector("#audio").files = dataTransfer.files;
+        console.log("#audio", document.querySelector("#audio").files[0]);
+      };
+
+      mediaRecorder.start();
+      recordButton.textContent = "Stop";
+    } catch (err) {
+      console.error("Error accessing audio device:", err);
     }
   }
-  const createEntryForm = document.getElementById("form-description");//targets our form in html
-  // console.log(createEntryForm);
-createEntryForm.addEventListener("submit", createDescriptionFunc);
+});
 
-// document.querySelector("#create-entry-form").addEventListener("submit", createDescriptionFunc);
+async function createDescriptionFunc(event) {
+  event.preventDefault();
+  const title = document.querySelector("#title").value.trim();
+  const mood_id = document.querySelector("#mood").value.trim();
+  const description = document.querySelector("#text-area").value.trim();
+  const audioBlob = document.querySelector("#audio").files[0];
+
+  const formData = new FormData();
+  formData.append("title", title);
+  formData.append("mood_id", mood_id);
+  formData.append("description", description);
+  formData.append("date_created", dateStr);
+  if (audioBlob) {
+    formData.append("audio", audioBlob);
+  }
+
+  const response = await fetch("/api/create", {
+    method: "POST",
+    body: formData,
+  });
+
+  if (response.ok) {
+    document.querySelector("#success").textContent = "Your entry has been successfully added!";
+  } else {
+    const resData = await response.json();
+    console.error(resData);
+    console.log("error in create_entry.js");
+  }
+}
+
+const createEntryForm = document.getElementById("form-description");
+createEntryForm.addEventListener("submit", createDescriptionFunc);
