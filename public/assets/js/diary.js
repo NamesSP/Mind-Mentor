@@ -9,14 +9,48 @@ async function renderDiaryEntries() {
     const entries = await response.json()
     // console.log(entries);
     const diaryListContainer = document.querySelector("#diary-list-container");
-    entries.forEach((entry)=> {
+    for(const entry of entries) {
         const entryContainer = document.createElement('div');
         const entryTitle = document.createElement('h2');
         const entryDate = document.createElement('h3');
+        const entryDescription = document.createElement('p');
         const spanEl = document.createElement('span');
+        const entryAudio = document.createElement('audio');
         const mood = entry.mood_id
         entryTitle.textContent = entry.title;
         entryDate.textContent = entry.date_created;
+        entryDescription.textContent = entry.description;
+        if (entry.audio_path) {
+            entryAudio.src = `/${entry.audio_path}`;  // Set the correct path
+            entryAudio.controls = true;
+        }
+
+         // Extract the description
+         const description = entry.description;
+
+         // Make a POST request to the analyze endpoint
+         const analyzeResponse = await fetch("http://localhost:5000/analyze", {
+             method: "POST",
+             headers: {
+                 "Content-Type": "application/json"
+             },
+             body: JSON.stringify({ text: description })
+         });
+ 
+        //  const analyzeResult = await analyzeResponse.json();
+ 
+        //  // Handle the response from the analyze API
+        //  console.log(analyzeResult); // You can update the UI based on the analyzeResult
+ 
+
+        
+        entryContainer.classList.add("entryContainer");
+        entryTitle.classList.add("entryTitle");
+        entryDate.classList.add("entryDate");
+        entryDescription.classList.add("entryDescription");
+        // mood.classList.add("entryMood");
+        entryAudio.classList.add("entryAudio"); // Set the correct path
+        entryContainer.classList.add("entryContainer");
         switch(mood) {
             case 1:
                 entryContainer.style.border = "5px solid black"
@@ -49,8 +83,8 @@ async function renderDiaryEntries() {
                 entryContainer.style.border = "5px solid pink"
                 break;
         }
-        entryContainer.append(entryTitle, entryDate);
+        entryContainer.append(entryTitle, entryDate,entryDescription,entryAudio);
         diaryListContainer.append(entryContainer);
-    })
+    }
 }
 renderDiaryEntries();
