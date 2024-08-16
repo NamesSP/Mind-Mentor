@@ -37,10 +37,10 @@ async function renderDiaryEntries() {
              body: JSON.stringify({ text: description })
          });
  
-        //  const analyzeResult = await analyzeResponse.json();
+         const analyzeResult = await analyzeResponse.json();
  
         //  // Handle the response from the analyze API
-        //  console.log(analyzeResult); // You can update the UI based on the analyzeResult
+         console.log(analyzeResult); // You can update the UI based on the analyzeResult
  
 
         

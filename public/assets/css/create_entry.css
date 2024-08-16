@@ -39,6 +39,7 @@ hr{
 }
 #entry-form{
     width: 50%;
+    margin-bottom:3rem;
 }
 #success{
     margin-top: 5px;
@@ -59,4 +60,13 @@ footer{
     gap: 20px;
     font-size: 20px;
     
+}
+
+.btn-secondary {
+    color:brown;
+}
+
+#audio-recording {
+    display: flex;
+
 }

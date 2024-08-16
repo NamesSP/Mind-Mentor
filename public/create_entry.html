@@ -65,17 +65,18 @@
       <textarea class="form-control" id="text-area" rows="12" 
       placeholder="Enter mood description here"></textarea>
     </div>
+    <input type="file" id="audio" accept="audio/*">
+    <div id="audio-recording">
+      <button type="button" id="record-button" class="btn btn-secondary">Record</button>
+    <audio id="audio-playback" controls></audio>
+    <label for="audio-source">Select Audio Source:</label>
+<select id="audio-source"></select>
+      </div>
+      <p id="transcribed-text"></p>
     <button type="submit" class="btn btn-primary">Create Entry</button>
   </form><!--End text area Form-->
 
-  <form id="create-entry-form">
-    <!-- Existing fields -->
-    <input type="file" id="audio" accept="audio/*">
-    <!-- <button type="submit">Submit</button> -->
-  </form>
-  <button type="button" id="record-button" class="btn btn-secondary">Record</button>
-<audio id="audio-playback" controls></audio>
-
+  
   <p id="success"></p>
 </div> <!--Entry-form -->
 </div>
