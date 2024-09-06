@@ -41,8 +41,11 @@ class SentimentAnalysis(Resource):
 class SpeechToText(Resource):
     def post(self):
             # Check if the request has a file part
+        print("Here control")
         if 'audio' not in request.files:
-            return jsonify({"error": "No audio file provided"}), 400
+            # return jsonify({"error": "No audio file provided"}), 400
+            
+            return jsonify({"transcription":"Looks like no audio file is present!!"})
         
         audio_file = request.files['audio']
         

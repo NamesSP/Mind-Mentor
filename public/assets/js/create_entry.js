@@ -10,7 +10,7 @@ success.textContent = "";
 async function getAudioDevices() {
   const devices = await navigator.mediaDevices.enumerateDevices();
   const audioInputDevices = devices.filter(device => device.kind === 'audioinput');
-  
+
   const audioSelect = document.getElementById("audio-source");
   audioSelect.innerHTML = ""; // Clear previous options
 
@@ -44,8 +44,8 @@ recordButton.addEventListener("click", async (event) => {
     try {
       console.log("inside try block");
       const audioSource = document.getElementById("audio-source").value;
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        audio: { deviceId: audioSource ? { exact: audioSource } : undefined } 
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: { deviceId: audioSource ? { exact: audioSource } : undefined }
       });
       mediaRecorder = new MediaRecorder(stream);
 
@@ -97,10 +97,48 @@ async function createDescriptionFunc(event) {
   formData.append("description", description);
   formData.append("date_created", dateStr);
   if (audioBlob) {
+    console.log("Has AudioBlob");
     formData.append("audio", audioBlob);
     formDataForAudio.append("audio", audioBlob);
   }
 
+  const loadingElement = document.getElementById("loading");
+  loadingElement.style.display = "block";  // Show loader
+
+  const TranscriptionResponse = await fetch("http://localhost:5000/transcribe", {
+    method: "POST",
+    body: formData,
+  });
+  // After loading, set it back to none
+  loadingElement.style.display = "none";  // Hide loader
+
+  if (TranscriptionResponse.ok) {
+    const resData = await TranscriptionResponse.json();
+    console.log("transcribe success :" + resData["transcription"]);
+    document.querySelector("#transcribed-text").textContent = "transcribe success :" + resData["transcription"];
+  } else {
+    const resData = await TranscriptionResponse.json();
+    console.error(resData);
+    console.log("error in transcribe api.js");
+    document.querySelector("#transcribed-text").textContent = "Error in transcribing";
+  }
+
+
+  // Make a POST request to the analyze endpoint
+  const analyzeResponse = await fetch("http://localhost:5000/analyze", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ text: description })
+  });
+
+  const analyzeResult = await analyzeResponse.json();
+
+  document.getElementById("analyze").innerText="ANALYSIS: Label:" + analyzeResult["label"]+" Polarity :"+analyzeResult["polarity"]; // You can update the UI based on the analyzeResult
+
+  //  // Handle the response from the analyze API
+  console.log(analyzeResult); // You can update the UI based on the analyzeResult
 
   const response = await fetch("/api/create", {
     method: "POST",
@@ -113,23 +151,6 @@ async function createDescriptionFunc(event) {
     const resData = await response.json();
     console.error(resData);
     console.log("error in create_entry.js");
-  }
-
-  const response2 = await fetch("http://localhost:5000/transcribe", {
-    method: "POST",
-    body: formData,
-  });
-
-  
-  if (response2.ok) {
-   const resData = await response2.json();
-   console.log("transcribe success :" +resData["transcription"]);
-   document.querySelector("#transcribed-text").textContent="transcribe success :" +resData["transcription"];
-  } else {
-    const resData = await response2.json();
-    console.error(resData);
-    console.log("error in transcribe api.js");
-    document.querySelector("#transcribed-text").textContent="Error in transcribing";
   }
 
 }

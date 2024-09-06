@@ -43,7 +43,7 @@ hr{
 }
 #success{
     margin-top: 5px;
-    font-size: large;
+    font-size: x-large;
     color: darkgreen;
     display: block;
 }
@@ -68,5 +68,13 @@ footer{
 
 #audio-recording {
     display: flex;
+}
 
+#loading{
+    display:none;
+}
+
+#transcribed-text {
+    color: #240084;
+    font-size: large;
 }
