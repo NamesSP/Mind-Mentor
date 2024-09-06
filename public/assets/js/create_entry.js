@@ -109,8 +109,7 @@ async function createDescriptionFunc(event) {
     method: "POST",
     body: formData,
   });
-  // After loading, set it back to none
-  loadingElement.style.display = "none";  // Hide loader
+  
 
   if (TranscriptionResponse.ok) {
     const resData = await TranscriptionResponse.json();
@@ -125,6 +124,10 @@ async function createDescriptionFunc(event) {
 
 
   // Make a POST request to the analyze endpoint
+  if (description === "") {
+    document.getElementById("analyze").innerText = "ANALYSIS: Label: N/A Polarity: N/A";
+  }
+  else {
   const analyzeResponse = await fetch("http://localhost:5000/analyze", {
     method: "POST",
     headers: {
@@ -139,12 +142,14 @@ async function createDescriptionFunc(event) {
 
   //  // Handle the response from the analyze API
   console.log(analyzeResult); // You can update the UI based on the analyzeResult
-
+  }
   const response = await fetch("/api/create", {
     method: "POST",
     body: formData,
   });
 
+  // After loading, set it back to none
+  loadingElement.style.display = "none";  // Hide loader
   if (response.ok) {
     document.querySelector("#success").textContent = "Your entry has been successfully added!";
   } else {
