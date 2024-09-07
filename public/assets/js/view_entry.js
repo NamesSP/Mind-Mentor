@@ -17,6 +17,25 @@ async function renderDiaryEntry() {
         const entryMood = document.createElement('p');
         const entryDescription = document.createElement('p');
         const entryAudio = document.createElement('audio');
+        const deleteButton = document.createElement('button');
+
+        deleteButton.textContent = "Delete";
+
+        deleteButton.addEventListener('click', async () => {
+            const deleteResponse = await fetch(`/api/diary/${entry.id}`, {
+                method: 'DELETE',
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (deleteResponse.ok) {
+                entryContainer.remove();
+            } else {
+                alert('Failed to delete entry');
+            }
+        });
+
 
         entryTitle.textContent = entry.title;
         entryDate.textContent = entry.date_created;
@@ -32,6 +51,8 @@ async function renderDiaryEntry() {
         entryDescription.classList.add("entryDescription");
         entryMood.classList.add("entryMood");
         entryAudio.classList.add("entryAudio");
+        deleteButton.classList.add("btn");
+        deleteButton.classList.add("btn-danger");
         
         switch(entry.mood_id) {
             case 1:
@@ -82,6 +103,7 @@ async function renderDiaryEntry() {
         entryContainer.append(entryMood);
         entryContainer.append(entryDescription);
         entryContainer.append(entryAudio);
+        entryContainer.append(deleteButton);
         diaryListContainer.append(entryContainer);
     })
 }

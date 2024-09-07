@@ -25,22 +25,22 @@ async function renderDiaryEntries() {
             entryAudio.controls = true;
         }
 
-         // Extract the description
-         const description = entry.description;
+        //  // Extract the description
+        //  const description = entry.description;
 
-         // Make a POST request to the analyze endpoint
-         const analyzeResponse = await fetch("http://localhost:5000/analyze", {
-             method: "POST",
-             headers: {
-                 "Content-Type": "application/json"
-             },
-             body: JSON.stringify({ text: description })
-         });
+        //  // Make a POST request to the analyze endpoint
+        //  const analyzeResponse = await fetch("http://localhost:5000/analyze", {
+        //      method: "POST",
+        //      headers: {
+        //          "Content-Type": "application/json"
+        //      },
+        //      body: JSON.stringify({ text: description })
+        //  });
  
-         const analyzeResult = await analyzeResponse.json();
+        //  const analyzeResult = await analyzeResponse.json();
  
-        //  // Handle the response from the analyze API
-         console.log(analyzeResult); // You can update the UI based on the analyzeResult
+        // //  // Handle the response from the analyze API
+        //  console.log(analyzeResult); // You can update the UI based on the analyzeResult
  
 
         

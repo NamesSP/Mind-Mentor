@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { Diary, Mood, User } = require('../../models');
 
 const withAuth = require('../../utils/auth');
+const deleteDiary = require('./deleteDiary');
 
 // GET all Diary
 // localhost:3001/api/diary
@@ -45,5 +46,10 @@ router.post('/', withAuth, async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+// DELETE a single Diary
+// localhost:3001/api/diary/:id
+router.delete('/:id', deleteDiary);
+
 
 module.exports = router;
