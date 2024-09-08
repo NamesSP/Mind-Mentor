@@ -42,7 +42,7 @@ router.get("/logout", (req, res) => {
       res.redirect("/login");
     });
   } else {
-    res.status(404).end();
+    res.status(404).json({ message: "No active session to log out" });
   }
 });
 

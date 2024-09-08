@@ -6,11 +6,34 @@ async function renderDiaryEntry() {
         }
     } )
 
-    const entries = await response.json()
+    const entries = await response.json();
+
+    var userId ;
+
+    async function fetchUserData() {
+        const response = await fetch('/api/login/user');
+        if (response.ok) {
+            const data = await response.json();
+            console.log("user id : ",data.user_id);
+            userId = data.user_id;
+        }
+        else {
+            data = await response.json();
+            console.log(data);
+            userId = -1;
+        }
+    }
+    await fetchUserData();
+
     // console.log(entries);
     const diaryListContainer = document.querySelector("#diary-container");
     entries.forEach((entry)=> {
 
+        
+        // Fetch the data from the backend endpoint
+      
+        if (entry.user_id==userId){
+           
         const entryContainer = document.createElement('div');
         const entryTitle = document.createElement('h3');
         const entryDate = document.createElement('p');
@@ -105,6 +128,7 @@ async function renderDiaryEntry() {
         entryContainer.append(entryAudio);
         entryContainer.append(deleteButton);
         diaryListContainer.append(entryContainer);
+    }
     })
 }
 renderDiaryEntry();
