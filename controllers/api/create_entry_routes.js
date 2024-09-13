@@ -17,6 +17,9 @@ router.post("/",upload.single('audio'),async (req, res) => {
       audio_path: audioPath,
       date_created: req.body.date_created,
       user_id: req.session.user_id,
+      time_stamp: req.body.time_stamp,
+      label: req.body.label,            
+      polarity: req.body.polarity     
     });
     res.status(200).json(diaryData);
     console.log("suceess in create_entry_routes.js");
