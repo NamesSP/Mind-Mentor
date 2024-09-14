@@ -51,5 +51,19 @@ router.post('/', withAuth, async (req, res) => {
 // localhost:3001/api/diary/:id
 router.delete('/:id', deleteDiary);
 
+//----------------------------------------
+
+router.get("/entries", async (req, res) => {
+  try {
+    const diaryEntries = await Diary.findAll({
+      attributes: ["time_stamp", "polarity", "label"]
+    });
+    res.status(200).json(diaryEntries);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+//-----------------------------------------------------------
+
 
 module.exports = router;

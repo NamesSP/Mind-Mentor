@@ -34,10 +34,19 @@ Diary.init(
                 key: 'id'
             },
         },
-        audio_path: {
+          polarity: {
+            type: DataTypes.FLOAT,
+            allowNull: true,
+          },
+          label: {
             type: DataTypes.STRING,
             allowNull: true,
           },
+          time_stamp: {
+            type: DataTypes.DATE,
+            allowNull: true,
+            defaultValue: DataTypes.NOW,
+        },
     },
     {
         sequelize,

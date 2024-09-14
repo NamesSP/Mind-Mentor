@@ -96,6 +96,8 @@ async function createDescriptionFunc(event) {
   formData.append("mood_id", mood_id);
   formData.append("description", description);
   formData.append("date_created", dateStr);
+  const time_stamp = new Date().toLocaleTimeString('en-GB', { hour12: false });
+ 
   if (audioBlob) {
     console.log("Has AudioBlob");
     formData.append("audio", audioBlob);
@@ -122,6 +124,8 @@ async function createDescriptionFunc(event) {
     document.querySelector("#transcribed-text").textContent = "Error in transcribing";
   }
 
+  
+
 
   // Make a POST request to the analyze endpoint
   if (description === "") {
@@ -139,6 +143,14 @@ async function createDescriptionFunc(event) {
   const analyzeResult = await analyzeResponse.json();
 
   document.getElementById("analyze").innerText="ANALYSIS: Label:" + analyzeResult["label"]+" Polarity :"+analyzeResult["polarity"]; // You can update the UI based on the analyzeResult
+
+
+  const polarity = analyzeResult["polarity"];
+const label = analyzeResult["label"];
+
+// Append polarity and label to formData
+formData.append("label", label);
+formData.append("polarity", polarity);
 
   //  // Handle the response from the analyze API
   console.log(analyzeResult); // You can update the UI based on the analyzeResult
