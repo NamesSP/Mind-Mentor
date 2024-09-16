@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
 
 // GET route to return the user_id if the user is logged in
 router.get('/user', (req, res) => {
-  console.log(req.session);
+  // console.log(req.session);
   if (req.session) {
       res.json({ user_id: req.session.user_id });
   } else {

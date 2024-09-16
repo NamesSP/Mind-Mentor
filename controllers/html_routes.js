@@ -6,12 +6,12 @@
 //test
 
 const router = require("express").Router();
-// const User = require('../models/User.js');
-// const withAuth = require('../utils/auth.js');
+const User = require('../models/User.js');
+const withAuth = require('../utils/auth.js');
 const path = require("path");
 
 // localhost:3001/
-router.get("/", (req, res) => {
+router.get("/",withAuth,(req, res) => {
   res.sendFile(path.join(__dirname, "../public/index.html"));
 });
 
@@ -19,18 +19,18 @@ router.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname, "../public/login.html"));
 });
 
-router.get("/diary", (req, res) => {
+router.get("/diary",withAuth,(req, res) => {
   res.sendFile(path.join(__dirname, "../public/dashboard.html"));
 });
-router.get("/view", (req, res) => {
+router.get("/view",withAuth,(req, res) => {
   res.sendFile(path.join(__dirname, "../public/view_entry.html"));
 }); 
 
-router.get("/create", (req, res) => {
+router.get("/create",withAuth,(req, res) => {
   res.sendFile(path.join(__dirname, "../public/create_entry.html"));
 });
 
-router.get("/submit", (req, res) => {
+router.get("/submit",withAuth,(req, res) => {
   res.sendFile(path.join(__dirname, "../public/dashboard.html"));
 });
 
